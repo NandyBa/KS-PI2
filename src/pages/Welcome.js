@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { Link, Outlet } from "react-router-dom";
 //import AppRoutes from "../../Routes";
 import Web3 from "web3";
-import Login from "./Login";
+import Login from "./Login/Login";
 import ChainInfo from "./ChainInfo";
 
 export const Main = (props) => {
@@ -31,14 +31,22 @@ export const Main = (props) => {
 
 
   return (
-    <div className="navbar">
-      <div className="nav-links">
+    <div>
+    <header>
+      <div className="logo">Gelato</div>
+
+      <nav class="nav-bar">
         <ul>
-
+          <li>
+            <a href="/">Home</a>
+          </li>
+          <li>
+            <a href="/automate">Automate</a>
+          </li>
         </ul>
-      </div>
+      </nav>
+    </header>
 
-    <Link to ="/automate">Automate</Link>
 
     <div className="login">
       {!isConnected && <Login onLogin={onLogin} onLogout={onLogout}/>}

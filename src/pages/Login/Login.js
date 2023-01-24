@@ -1,6 +1,6 @@
 import {useState} from "react";
-import Card from "./Card/Card";
-
+import Card from "../Card/Card";
+import classes from "./login.css";
 
 const Login = (props) => {
     
