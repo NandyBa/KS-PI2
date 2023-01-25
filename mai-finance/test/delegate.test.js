@@ -16,6 +16,23 @@ contract("delegate", accounts => {
         assert.isTrue(_delegate!=null, "Delegate deployment failed");  
  
     });
+
+    it("should not deposit ERC721 token to the delegate contract, user doesn't call approve", async () => {
+        const mai = await fakeMai.new("mai","MAI"); 
+        assert.isTrue(mai != null, "Mai deployement failed");
+        const vault = await FakeVault.new(mai.address, "vault", "VAULT" ); 
+        assert.isTrue(vault != null, "Vault deployement failed"); 
+        const _delegate = await delegate.new(mai.address, vault.address); 
+        assert.isTrue(_delegate!=null, "Delegate deployment failed"); 
+        
+
+        
+        const tokenId = await vault.createVault({from : accounts[0]}); 
+        const balance = await vault.balanceOf.call( accounts[0]); 
+        assert.isTrue(balance.gt(0), "token mint failed");  
+        await tryCatch(delegate.depositErc721(0,"test", {from: accounts[2]}), errTypes.revert);
+
+    });
  
     it("should deposit ERC721 token to the delegate contract, user call approve", async () => {
         const mai = await fakeMai.new("mai","MAI"); 
