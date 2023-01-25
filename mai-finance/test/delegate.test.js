@@ -1,6 +1,8 @@
 const delegate = artifacts.require("delegate");
 const fakeMai = artifacts.require("fakeMai"); 
 const FakeVault = artifacts.require("FakeVault"); 
+let tryCatch = require("./exceptions.js").tryCatch;
+let errTypes = require("./exceptions.js").errTypes;
 
 contract("delegate", accounts => {
     
@@ -30,7 +32,7 @@ contract("delegate", accounts => {
         const tokenId = await vault.createVault({from : accounts[0]}); 
         const balance = await vault.balanceOf.call( accounts[0]); 
         assert.isTrue(balance.gt(0), "token mint failed");  
-        await tryCatch(delegate.depositErc721(0,"test", {from: accounts[2]}), errTypes.revert);
+        await tryCatch(_delegate.depositErc721(0,"test", {from: accounts[2]}), errTypes.revert);
 
     });
  
