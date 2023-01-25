@@ -1,10 +1,20 @@
-import { useState } from "react";
 import { GelatoOpsSDK, isGelatoOpsSupported, TaskTransaction } from "@gelatonetwork/ops-sdk";
 import { Contract } from "ethers";
+import Card from "./Card/Card";
+import classes from "./Card/Card.css"
 import { ethers } from "ethers";
+import { useEffect, useState } from "react";
 import counterAbi from "../abis/CounterTest.json";
 
 function Automate(){
+
+    const[contractAddress, setContractAddress] = useState();
+
+    const handleInput = (event) => {
+        setContractAddress(event.target.value)
+    }
+
+
 
     async function CreateTask(){
         // const providerUrl = "https://eth-goerli.g.alchemy.com/v2/"
@@ -16,7 +26,6 @@ function Automate(){
         const chainId = networkDetails.chainId;
 
         // let signer = provider.getSigner();
-
 
         if (!isGelatoOpsSupported(chainId)) {
             console.log(`Gelato Ops network not supported (${chainId})`);
@@ -46,8 +55,45 @@ function Automate(){
     }
 
         return(
+
         <div className="automation">
-            <button onClick={CreateTask}>Create Task</button>
+
+            <header>
+                <div className="logo">Gelato</div>
+                    
+                <nav class="nav-bar">
+                    <ul>
+                        <li>
+                            <a href="/">Home</a>
+                        </li>
+                        <li>
+                            <a className="active" href="/automate">Automate</a>
+                        </li>
+                    </ul>
+                </nav>
+            </header>
+
+            <div className="background">
+                <form>
+                    <label for="ContractAddress">Contract's Address:</label><br/><br/>
+                    <input type="text" id="username" name="ContractAddress"></input><br/>
+                    <button onClick={CreateTask}>Create Task</button>
+                </form>
+            </div>
+
+
+
+            {/* <div>
+                <form>
+                    <label for="ContractAddress">Contract to Automate</label>
+                    <input type="text" value={contractAddress} onChange={e=>handleInput(e)} id="ContractAddress" name="ContractAddress">Contract</input>
+                </form>
+            </div> */}
+
+
+
+            <br/>
+
         </div>
     );
 }

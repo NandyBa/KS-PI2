@@ -38,7 +38,7 @@ export const Main = (props) => {
       <nav class="nav-bar">
         <ul>
           <li>
-            <a href="/">Home</a>
+            <a className="active" href="/">Home</a>
           </li>
           <li>
             <a href="/automate">Automate</a>
