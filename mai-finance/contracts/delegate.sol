@@ -1,4 +1,4 @@
-pragma solidity ^0.8.4; // regarder la version sur les contracts de qidao 0.5.5 demander à Nandy quel est le mieux 
+pragma solidity ^0.8.1; // regarder la version sur les contracts de qidao 0.5.5 demander à Nandy quel est le mieux 
 
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";

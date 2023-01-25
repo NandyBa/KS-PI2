@@ -5,9 +5,9 @@ var Delegate = artifacts.require("delegate");
 module.exports = (deployer, network, accounts) => {
    deployer.then(async () =>{
     await deployFakeMai(); 
-   await deployVault(); 
-   await deployDelegate(); 
-   await deployRecap(); 
+    await deployVault(); 
+    await deployDelegate(); 
+    await deployRecap(); 
    });
 }; 
 
