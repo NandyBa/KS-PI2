@@ -74,9 +74,9 @@ header{
 }
 
 button{
-  background-color: #002D62; 
+  background-color: #11101b; 
   border-radius: 29px; 
-  border: 1px solid #002D62; 
+  border: 1px solid #11101b; 
   color: white; 
   font-size: 15px; 
  padding: 10px 45px; 
@@ -86,8 +86,8 @@ button{
 
 button:hover{
   background-color: white; 
-  color: #002D62; 
-  border-color: #002D62; 
+  color: #11101b; 
+  border-color: #11101b; 
   transition: 0.3s; 
 }
 

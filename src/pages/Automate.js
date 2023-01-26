@@ -44,7 +44,7 @@ function Automate(){
         //Function = increaseCount(uint256)
 
         const gelatoOps = new GelatoOpsSDK(chainId, signer);
-        const counter = new Contract(inputs.contractAddress, counterAbi, signer);
+        const counter = new Contract(inputs.contractAddress, inputs.contractABI, signer);
         const selector = counter.interface.getSighash(inputs.selectedFunction);
         const resolverData = counter.interface.getSighash("checker()");
 
@@ -67,6 +67,22 @@ function Automate(){
         console.log(`> https://app.gelato.network/task/${taskId}?chainId=${chainId}`);   
     }
 
+    async function ManageTasks(){
+
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+
+        const networkDetails = await provider.getNetwork();
+        const chainId = networkDetails.chainId;
+
+        const gelatoOps = new GelatoOpsSDK(chainId, signer);
+
+        const activeTasks = await gelatoOps.getActiveTasks();
+        activeTasks.forEach((task) => {
+            console.log(`- ${task.name} (${task.taskId})`);
+        });
+    }
+
         return(
 
         <div className="automation">
@@ -82,6 +98,9 @@ function Automate(){
                         <li>
                             <a className="active" href="/automate">Automate</a>
                         </li>
+                        <li>
+                            <a href="/manage">Manage</a>
+                        </li>
                     </ul>
                 </nav>
             </header>
@@ -92,25 +111,15 @@ function Automate(){
                     <input type="text" id="contractAddress" name="contractAddress" placeholder="0x..." onChange={handleChange}></input><br/><br/>
 
                     <label htmlFor="ContractAbi">Contract Abi</label><br/>
-                    <input type="text" id="contractABI" name="contractAbi" placeholder="[...]" onChange={handleChange}></input><br/><br/>
+                    <input type="text" id="contractABI" name="contractABI" placeholder="[...]" onChange={handleChange}></input><br/><br/>
 
                     <label htmlFor="Function">Select a function</label><br/>
                     <input type="text" id="selectedFunction" name="selectedFunction" placeholder="function()" onChange={handleChange}></input><br/><br/>
                 </form>
 
                 <button onClick={CreateTask}>Create Task</button>
+                <button onClick={ManageTasks}>Manage Tasks</button>
             </div>
-
-
-
-            {/* <div>
-                <form>
-                    <label for="ContractAddress">Contract to Automate</label>
-                    <input type="text" value={contractAddress} onChange={e=>handleInput(e)} id="ContractAddress" name="ContractAddress">Contract</input>
-                </form>
-            </div> */}
-
-
 
             <br/>
 

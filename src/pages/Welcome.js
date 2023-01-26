@@ -43,6 +43,9 @@ export const Main = (props) => {
           <li>
             <a href="/automate">Automate</a>
           </li>
+          <li>
+            <a href="/manage">Manage</a>
+          </li>
         </ul>
       </nav>
     </header>
