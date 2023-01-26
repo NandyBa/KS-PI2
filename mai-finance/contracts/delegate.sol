@@ -1,11 +1,11 @@
 pragma solidity ^0.8.1; // regarder la version sur les contracts de qidao 0.5.5 demander à Nandy quel est le mieux 
 
-import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+/*import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";*/
 
 
-import "./FakeVault.sol"; 
+import "./stableQiVault.sol"; 
 
 contract delegate{
 
@@ -34,8 +34,9 @@ contract delegate{
 
     event NftWithdrawn(address, string, uint256); 
 
+    event Approval(address, uint256); 
+
     ERC20 public mai;
-    FakeVault public _fakevault; 
 
 
     constructor(address _mai, address _vault) {
@@ -49,6 +50,9 @@ contract delegate{
     }
     
     // Depositor need to approve the address of the contract by calling approve to deposit ERC721
+
+    
+    
     function depositErc721(uint256 _erc721_Id, string memory _vault) public {
 
         address owner = IERC721(vaultAddress[_vault]).ownerOf(_erc721_Id); 
@@ -86,8 +90,8 @@ contract delegate{
         }
         if(ownVault==false)
             revert("You must own the vault to delegate");    
-        hasDelegated[_owner][_borrower][_vault][_erc721_Id] = _amount; 
-        emit BorrowedToMaiFinance(_owner, vaultAddress[_vault], _amount); 
+        hasDelegated[_owner][_borrower][_vault][_erc721_Id] = _amount*(10**18); 
+        emit BorrowedToMaiFinance(_owner, vaultAddress[_vault], _amount*(10**18)); 
     }
 
     
@@ -95,9 +99,8 @@ contract delegate{
         if(msg.sender != _borrower)
             revert("You must be the borrower"); 
         uint _amount = hasDelegated[_owner][_borrower][_vault][_erc721_Id]; 
-        (bool success,) = vaultAddress[_vault].call(abi.encodeWithSignature("borrowToken(uint256,uint256,uint256)",_erc721_Id,_amount,0)); 
-         if(success!=true)
-            revert("Error while borrowing Token to Mai Finance");  
+        stableQiVault _qiVault = stableQiVault(vaultAddress[_vault]);
+        _qiVault.borrowToken(_erc721_Id, _amount, 0);  
         mai.transfer(msg.sender,_amount); 
         hasBorrowed[_owner][_borrower][_vault][_erc721_Id] = _amount; 
         vaultDebt[_vault][_erc721_Id] = _amount; 
@@ -107,18 +110,20 @@ contract delegate{
     // the _borrower must add allowance to the contract
     // PROBLEME EN APPEANT PAYBACK CAR PAS D ALLOWANCE POUR LE SAFETRANSFER 
     function repayLoan(uint256 _amount, address _owner, address _borrower, string memory _vault, uint256 _erc721_Id) public {
-        FakeVault _fake = FakeVault(vaultAddress[_vault]); 
-        if(_amount!=hasBorrowed[_owner][_borrower][_vault][_erc721_Id])
+        stableQiVault _qiVault = stableQiVault(vaultAddress[_vault]); 
+        if(_amount*18!=hasBorrowed[_owner][_borrower][_vault][_erc721_Id])
             revert("You must repay the amount of the loan"); 
-            
-        mai.increaseAllowance(vaultAddress[_vault], _amount); 
+
+         // increase allowance to the vault contract for the repay function    
+        mai.increaseAllowance(vaultAddress[_vault], _amount*(10**18));    
+        mai.transferFrom(msg.sender, address(this), _amount*(10**18)); 
+        _qiVault.payBackToken(_erc721_Id, _amount, 0);
+        vaultDebt[_vault][_erc721_Id]-=_amount* (10**18);  
         
-        mai.transferFrom(msg.sender, address(this), _amount); 
-        _fake.payBackToken(_erc721_Id, _amount, 0); 
         
     }   
 
-    // voir comment le contrat fait quand le borrower n'a pas emprunter 
+   
     function withdraw_NFT(string memory _vault, uint256 _erc721_Id, address _owner, address _borrower) public {
         if(vaultDebt[_vault][_erc721_Id] != 0)
             revert("The loan must be repay before withrawing the nft"); 
