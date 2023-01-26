@@ -87,11 +87,6 @@ contract delegate{
         if(ownVault==false)
             revert("You must own the vault to delegate");    
         hasDelegated[_owner][_borrower][_vault][_erc721_Id] = _amount; 
-
-        // the delegation is approved so the contract borrow amount to my finance 
-        /*(bool success,) = vaultAddress[_vault].call(abi.encodeWithSignature("borrowToken(uint256,uint256,uint256)",_erc721_Id,_amount,0)); 
-        if(success!=true)
-            revert("Error while borrowing Token to Mai Finance");  */
         emit BorrowedToMaiFinance(_owner, vaultAddress[_vault], _amount); 
     }
 
@@ -138,7 +133,9 @@ contract delegate{
         emit NftWithdrawn(msg.sender, _vault,_erc721_Id); 
     }
 
-    function testAllowance( string memory _vault) public {
-        mai.increaseAllowance(vaultAddress[_vault],400); 
+    function getNftByOwner(string memory _vault) public view returns(uint256[] memory) {
+        return isOwner[msg.sender][_vault]; 
     }
+
+
 }
