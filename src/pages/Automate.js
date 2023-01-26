@@ -8,50 +8,63 @@ import counterAbi from "../abis/CounterTest.json";
 
 function Automate(){
 
-    const[contractAddress, setContractAddress] = useState();
 
-    const handleInput = (event) => {
-        setContractAddress(event.target.value)
-    }
+    const[inputs, setInputs] = useState({
+        contractAddress : '',
+        contractABI : '',
+        selectedFunction : '',
+    });
 
+    const handleChange = (e) => {
+        setInputs({...inputs, [e.target.name]: e.target.value})
+    };
+
+    // const handleInput = (event) => {
+    //     setContractAddress(event.target.value);
+    // }
 
 
     async function CreateTask(){
         // const providerUrl = "https://eth-goerli.g.alchemy.com/v2/"
         // let provider = ethers.getDefaultProvider("goerli");
+
+          // Init GelatoOpsSDK
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
 
         const networkDetails = await provider.getNetwork();
         const chainId = networkDetails.chainId;
 
-        // let signer = provider.getSigner();
-
         if (!isGelatoOpsSupported(chainId)) {
             console.log(`Gelato Ops network not supported (${chainId})`);
             return;
         }
 
+        //Counter Address = 0x69C904fed91BFe2a354DbDd1A1078485389Fe6E9;
+        //Function = increaseCount(uint256)
+
         const gelatoOps = new GelatoOpsSDK(chainId, signer);
-        const counter = new Contract("0x69C904fed91BFe2a354DbDd1A1078485389Fe6E9", counterAbi, signer);
-        const selector = counter.interface.getSighash("increaseCount(uint256)");
+        const counter = new Contract(inputs.contractAddress, counterAbi, signer);
+        const selector = counter.interface.getSighash(inputs.selectedFunction);
         const resolverData = counter.interface.getSighash("checker()");
 
-            // Create task
-            console.log("Creating Task...");
-            const { taskId, tx } = await gelatoOps.createTask({
-                execAddress: counter.address,
-                execSelector: selector,
-                execAbi: JSON.stringify(counterAbi),
-                resolverAddress: counter.address,
-                resolverData: resolverData,
-                resolverAbi: JSON.stringify(counterAbi),
-                name: "Automated counter with resolver",
-                dedicatedMsgSender: true,
-            });
-            await tx.wait();
-            console.log(`Task created, taskId: ${taskId} (tx hash: ${tx.hash})`);
-            console.log(`> https://app.gelato.network/task/${taskId}?chainId=${chainId}`);   
+        // Create task
+        console.log("Creating Task...");
+
+        const { taskId, tx } = await gelatoOps.createTask({
+            execAddress: counter.address,
+            execSelector: selector,
+            execAbi: JSON.stringify(counterAbi),
+            resolverAddress: counter.address,
+            resolverData: resolverData,
+            resolverAbi: JSON.stringify(counterAbi),
+            name: "Automated counter with resolver",
+            dedicatedMsgSender: true,
+        });
+
+        await tx.wait();
+        console.log(`Task created, taskId: ${taskId} (tx hash: ${tx.hash})`);
+        console.log(`> https://app.gelato.network/task/${taskId}?chainId=${chainId}`);   
     }
 
         return(
@@ -61,7 +74,7 @@ function Automate(){
             <header>
                 <div className="logo">Gelato</div>
                     
-                <nav class="nav-bar">
+                <nav className="nav-bar">
                     <ul>
                         <li>
                             <a href="/">Home</a>
@@ -75,10 +88,17 @@ function Automate(){
 
             <div className="background">
                 <form>
-                    <label for="ContractAddress">Contract's Address:</label><br/><br/>
-                    <input type="text" id="username" name="ContractAddress"></input><br/>
-                    <button onClick={CreateTask}>Create Task</button>
+                    <label htmlFor="ContractAddress">Contract Address</label><br/>
+                    <input type="text" id="contractAddress" name="contractAddress" placeholder="0x..." onChange={handleChange}></input><br/><br/>
+
+                    <label htmlFor="ContractAbi">Contract Abi</label><br/>
+                    <input type="text" id="contractABI" name="contractAbi" placeholder="[...]" onChange={handleChange}></input><br/><br/>
+
+                    <label htmlFor="Function">Select a function</label><br/>
+                    <input type="text" id="selectedFunction" name="selectedFunction" placeholder="function()" onChange={handleChange}></input><br/><br/>
                 </form>
+
+                <button onClick={CreateTask}>Create Task</button>
             </div>
 
 

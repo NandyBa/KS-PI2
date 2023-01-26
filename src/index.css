@@ -64,16 +64,13 @@ header{
 } */
 
 .background{
-  margin-top: 50px;
-  padding: 0 100px;
-  background: white;
-  margin-left: auto;
-  margin-right: auto;
-  height: 80px;
+  width: 90%;
+  max-width: 40rem;
+  padding: 3rem;
+  margin: 2rem auto;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.26);
+  background-color: white;
   border-radius: 10px;
-  width: 50%;
 }
 
 button{
@@ -93,3 +90,4 @@ button:hover{
   border-color: #002D62; 
   transition: 0.3s; 
 }
+

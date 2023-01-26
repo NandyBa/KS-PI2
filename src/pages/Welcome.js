@@ -35,7 +35,7 @@ export const Main = (props) => {
     <header>
       <div className="logo">Gelato</div>
 
-      <nav class="nav-bar">
+      <nav className="nav-bar">
         <ul>
           <li>
             <a className="active" href="/">Home</a>
