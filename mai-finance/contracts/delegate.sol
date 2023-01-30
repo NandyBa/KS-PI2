@@ -1,146 +1,162 @@
-pragma solidity ^0.8.1; // regarder la version sur les contracts de qidao 0.5.5 demander à Nandy quel est le mieux 
+pragma solidity ^0.8.17; // regarder la version sur les contracts de qidao 0.5.5 demander à Nandy quel est le mieux 
 
 /*import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";*/
 
 
-import "./stableQiVault.sol"; 
+import "./stableQiVault.sol";
 
 contract delegate{
 
-    address nftVaultAddress; 
 
 
     mapping(address=>mapping(string=>uint256[])) public isOwner; // mapping à la place du uint256
 
-    // owner => borrower => vaultName => tokenId => amount delegated 
-    mapping(address=>mapping(address=>mapping(string=>mapping(uint256=>uint256)))) public hasDelegated; 
+    // owner => borrower => vaultName => tokenId => amount delegated
+    mapping(address=>mapping(address=>mapping(string=>mapping(uint256=>uint256)))) public hasDelegated;
 
-    mapping(address=>mapping(address=>mapping(string=>mapping(uint256=>uint256)))) public hasBorrowed; 
+    mapping(address=>mapping(address=>mapping(string=>mapping(uint256=>uint256)))) public hasBorrowed;
 
 
     mapping(string => address) public vaultAddress;
 
 
-    mapping(string => mapping(uint256 => uint256)) public vaultDebt ; 
+    mapping(string => mapping(uint256 => uint256)) public vaultDebt ;
+    mapping(address=>bool) public isAdmin;
 
 
-    event TokenReceived(address, uint256); 
+    event TokenReceived(address, uint256);
 
-    event DelegationApproved(address, address, string, uint256, uint256); 
+    event DelegationApproved(address, address, string, uint256, uint256);
 
     event BorrowedToMaiFinance(address indexed depositor, address vault, uint256 amount);
 
-    event NftWithdrawn(address, string, uint256); 
+    event NftWithdrawn(address, string, uint256);
 
-    event Approval(address, uint256); 
+    event Approval(address, uint256);
 
     ERC20 public mai;
 
 
     constructor(address _mai, address _vault) {
-         
+    
         vaultAddress["test"] = address(_vault);
-        mai = ERC20(_mai); 
+        mai = ERC20(_mai);
+        isAdmin[msg.sender] = true;
     }
- 
+
     function onERC721Received( address operator, address from, uint256 tokenId, bytes calldata data ) public returns (bytes4) {
             return this.onERC721Received.selector;
     }
-    
     // Depositor need to approve the address of the contract by calling approve to deposit ERC721
 
-    
-    
     function depositErc721(uint256 _erc721_Id, string memory _vault) public {
 
-        address owner = IERC721(vaultAddress[_vault]).ownerOf(_erc721_Id); 
+        address owner = IERC721(vaultAddress[_vault]).ownerOf(_erc721_Id);
         if(owner!=msg.sender)
-            revert("you are not the owner of the vault"); 
+            revert("you are not the owner of the vault");
 
-        IERC721(vaultAddress[_vault]).safeTransferFrom(owner, address(this),_erc721_Id); 
-      
+        IERC721(vaultAddress[_vault]).safeTransferFrom(owner, address(this),_erc721_Id);
+    
         address newOwner = IERC721(vaultAddress[_vault]).ownerOf(_erc721_Id);
         if(newOwner!=address(this))
-            revert("Error nft not received");  
+            revert("Error nft not received");
         isOwner[msg.sender][_vault].push(_erc721_Id);
 
-        emit TokenReceived(msg.sender, _erc721_Id); 
+        emit TokenReceived(msg.sender, _erc721_Id);
     }
 
     // for mai finance, the contract borrow, so It keep rtack of the contrcat address
     function approveDelegation(address _owner, address _borrower, string memory _vault, uint256 _erc721_Id, uint256 _amount) public{
-        bool ownVault = false; 
+        bool ownVault = false;
 
         if(msg.sender!=_owner)
-            revert("You must be the owner of the vault"); 
+            revert("You must be the owner of the vault");
         if(_amount<=0)
-            revert("You must delegate more than 0"); 
+            revert("You must delegate more than 0");
         if(_borrower==_owner)
-            revert("You can't delegate to the same address"); 
+            revert("You can't delegate to the same address");
         if(_borrower==address(0))
-            revert("You can't delegate to adress(0) (0x0000000000000)"); 
-        for (uint i=0; i <= isOwner[_owner][_vault].length -1; i++) {
-            
+            revert("You can't delegate to adress(0) (0x0000000000000)");
+        for (uint i = 0; i <= isOwner[_owner][_vault].length - 1; i++) {
+
             if (_erc721_Id == isOwner[_owner][_vault][i]) {
                 ownVault = true;
                 break;
             }
         }
         if(ownVault==false)
-            revert("You must own the vault to delegate");    
-        hasDelegated[_owner][_borrower][_vault][_erc721_Id] = _amount*(10**18); 
-        emit BorrowedToMaiFinance(_owner, vaultAddress[_vault], _amount*(10**18)); 
+            revert("You must own the vault to delegate");
+        hasDelegated[_owner][_borrower][_vault][_erc721_Id] = _amount*(10**18);
+        emit BorrowedToMaiFinance(_owner, vaultAddress[_vault], _amount*(10**18));
     }
 
     
     function userBorrowMai(address _owner, address _borrower, string memory _vault, uint256 _erc721_Id) public{
         if(msg.sender != _borrower)
-            revert("You must be the borrower"); 
-        uint _amount = hasDelegated[_owner][_borrower][_vault][_erc721_Id]; 
+            revert("You must be the borrower");
+        uint _amount = hasDelegated[_owner][_borrower][_vault][_erc721_Id];
         stableQiVault _qiVault = stableQiVault(vaultAddress[_vault]);
-        _qiVault.borrowToken(_erc721_Id, _amount, 0);  
-        mai.transfer(msg.sender,_amount); 
-        hasBorrowed[_owner][_borrower][_vault][_erc721_Id] = _amount; 
-        vaultDebt[_vault][_erc721_Id] = _amount; 
+        _qiVault.borrowToken(_erc721_Id, _amount, 0);
+        mai.transfer(msg.sender,_amount);
+        hasBorrowed[_owner][_borrower][_vault][_erc721_Id] = _amount;
+        vaultDebt[_vault][_erc721_Id] = _amount;
     }
 
 
     // the _borrower must add allowance to the contract
-    // PROBLEME EN APPEANT PAYBACK CAR PAS D ALLOWANCE POUR LE SAFETRANSFER 
+    // PROBLEME EN APPEANT PAYBACK CAR PAS D ALLOWANCE POUR LE SAFETRANSFER
     function repayLoan(uint256 _amount, address _owner, address _borrower, string memory _vault, uint256 _erc721_Id) public {
-        stableQiVault _qiVault = stableQiVault(vaultAddress[_vault]); 
-        if(_amount*18!=hasBorrowed[_owner][_borrower][_vault][_erc721_Id])
-            revert("You must repay the amount of the loan"); 
+        stableQiVault _qiVault = stableQiVault(vaultAddress[_vault]);
+        if(_amount*10 ** 18!=hasBorrowed[_owner][_borrower][_vault][_erc721_Id])
+            revert("You must repay the amount of the loan");
 
-         // increase allowance to the vault contract for the repay function    
-        mai.increaseAllowance(vaultAddress[_vault], _amount*(10**18));    
-        mai.transferFrom(msg.sender, address(this), _amount*(10**18)); 
-        _qiVault.paybackTokenAll(_erc721_Id, block.timestamp,0);
-        vaultDebt[_vault][_erc721_Id]-=_amount* (10**18);  
-        
-        
-    }   
+         // increase allowance to the vault contract for the repay function
+        mai.increaseAllowance(vaultAddress[_vault], _amount*(10**18));
+        mai.transferFrom(msg.sender, address(this), _amount*(10**18));
+        _qiVault.paybackTokenAll(_erc721_Id, block.timestamp, 0);
+        vaultDebt[_vault][_erc721_Id] -= _amount * (10 ** 18);
+    }
 
    
-    function withdraw_NFT(string memory _vault, uint256 _erc721_Id, address _owner, address _borrower) public {
+    function withdraw_NFT(string memory _vault, uint256 _erc721_Id) public {
         if(vaultDebt[_vault][_erc721_Id] != 0)
-            revert("The loan must be repay before withrawing the nft"); 
-        bool owner = false; 
+            revert("The loan must be repay before withrawing the nft");
+        bool owner = false;
          for (uint i = 0; i < isOwner[msg.sender][_vault].length - 1; i++) {
             if(isOwner[msg.sender][_vault][i] == _erc721_Id) {
-                owner = true; 
+                owner = true;
                 break;
-            }            
+            }
         }
-        IERC721(vaultAddress[_vault]).safeTransferFrom(address(this), msg.sender, _erc721_Id); 
-        emit NftWithdrawn(msg.sender, _vault,_erc721_Id); 
+        IERC721(vaultAddress[_vault]).safeTransferFrom(address(this), msg.sender, _erc721_Id);
+        emit NftWithdrawn(msg.sender, _vault,_erc721_Id);
     }
 
     function getNftByOwner(string memory _vault) public view returns(uint256[] memory) {
-        return isOwner[msg.sender][_vault]; 
+        return isOwner[msg.sender][_vault];
     }
 
+    modifier admin{
+        require(isAdmin[msg.sender],"You are not an admin");
+        _;
+    }
+
+    function addVault(string memory _name, address _vaultAddress) public admin{
+        vaultAddress[_name] = _vaultAddress;
+    }
+
+    function addAdmin(address _address) public admin{
+        isAdmin[_address] = true;
+    }
+
+    function getAdmin(address _address) public view returns(bool) {
+        return isAdmin[_address];
+    }
+
+    function amountBorrowed(address _owner, address _borrower, string memory _vault, uint256 _erc721_Id) public view returns(uint){
+        return hasBorrowed[_owner][_borrower][_vault][_erc721_Id]; 
+    }
 
 }

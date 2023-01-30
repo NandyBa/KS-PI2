@@ -8,7 +8,7 @@
 
 // OpenZeppelin Contracts v4.4.1 (utils/Context.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 /**
  * @dev Provides information about the current execution context, including the
@@ -35,7 +35,7 @@ abstract contract Context {
 
 // OpenZeppelin Contracts v4.4.1 (access/Ownable.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 /**
  * @dev Contract module which provides a basic access control mechanism, where
@@ -112,7 +112,7 @@ abstract contract Ownable is Context {
 
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC20/IERC20.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 /**
  * @dev Interface of the ERC20 standard as defined in the EIP.
@@ -197,7 +197,7 @@ interface IERC20 {
 
 // OpenZeppelin Contracts (last updated v4.5.0) (utils/Address.sol)
 
-pragma solidity ^0.8.1;
+pragma solidity ^0.8.17;
 
 /**
  * @dev Collection of functions related to the address type
@@ -422,7 +422,7 @@ library Address {
 
 // OpenZeppelin Contracts v4.4.1 (token/ERC20/utils/SafeERC20.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 
 /**
@@ -522,7 +522,7 @@ library SafeERC20 {
 
 // OpenZeppelin Contracts v4.4.1 (token/ERC20/extensions/IERC20Metadata.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 /**
  * @dev Interface for the optional metadata functions from the ERC20 standard.
@@ -551,7 +551,7 @@ interface IERC20Metadata is IERC20 {
 
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC20/ERC20.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 
 
@@ -935,7 +935,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
 
 // OpenZeppelin Contracts v4.4.1 (security/ReentrancyGuard.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 /**
  * @dev Contract module that helps prevent reentrant calls to a function.
@@ -1011,7 +1011,7 @@ interface IPriceSource {
 
 // OpenZeppelin Contracts v4.4.1 (utils/introspection/IERC165.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 /**
  * @dev Interface of the ERC165 standard, as defined in the
@@ -1039,7 +1039,7 @@ interface IERC165 {
 
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC721/IERC721.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 /**
  * @dev Required interface of an ERC721 compliant contract.
@@ -1183,7 +1183,7 @@ interface IERC721 is IERC165 {
 
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC721/IERC721Receiver.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 /**
  * @title ERC721 token receiver interface
@@ -1213,7 +1213,7 @@ interface IERC721Receiver {
 
 // OpenZeppelin Contracts v4.4.1 (token/ERC721/extensions/IERC721Metadata.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 /**
  * @title ERC-721 Non-Fungible Token Standard, optional metadata extension
@@ -1241,7 +1241,7 @@ interface IERC721Metadata is IERC721 {
 
 // OpenZeppelin Contracts v4.4.1 (utils/Strings.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 /**
  * @dev String operations.
@@ -1311,7 +1311,7 @@ library Strings {
 
 // OpenZeppelin Contracts v4.4.1 (utils/introspection/ERC165.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 /**
  * @dev Implementation of the {IERC165} interface.
@@ -1341,7 +1341,7 @@ abstract contract ERC165 is IERC165 {
 
 // OpenZeppelin Contracts (last updated v4.6.0) (token/ERC721/ERC721.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 
 
@@ -1789,7 +1789,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata {
 
 // OpenZeppelin Contracts (last updated v4.5.0) (token/ERC721/extensions/IERC721Enumerable.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 /**
  * @title ERC-721 Non-Fungible Token Standard, optional enumeration extension
@@ -1819,7 +1819,7 @@ interface IERC721Enumerable is IERC721 {
 
 // OpenZeppelin Contracts v4.4.1 (token/ERC721/extensions/ERC721Enumerable.sol)
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.17;
 
 
 /**
