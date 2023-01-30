@@ -18,13 +18,11 @@ contract delegate{
 
     mapping(address=>mapping(address=>mapping(string=>mapping(uint256=>uint256)))) public hasBorrowed;
 
-
     mapping(string => address) public vaultAddress;
 
-
     mapping(string => mapping(uint256 => uint256)) public vaultDebt ;
-    mapping(address=>bool) public isAdmin;
 
+    mapping(address=>bool) public isAdmin;
 
     event TokenReceived(address, uint256);
 
@@ -134,10 +132,6 @@ contract delegate{
         emit NftWithdrawn(msg.sender, _vault,_erc721_Id);
     }
 
-    function getNftByOwner(string memory _vault) public view returns(uint256[] memory) {
-        return isOwner[msg.sender][_vault];
-    }
-
     modifier admin{
         require(isAdmin[msg.sender],"You are not an admin");
         _;
@@ -155,8 +149,17 @@ contract delegate{
         return isAdmin[_address];
     }
 
-    function amountBorrowed(address _owner, address _borrower, string memory _vault, uint256 _erc721_Id) public view returns(uint){
-        return hasBorrowed[_owner][_borrower][_vault][_erc721_Id]; 
+    function getAmountBorrowed(address _owner, string memory _vault, uint256 _erc721_Id) public view returns(uint){
+        return hasBorrowed[_owner][msg.sender][_vault][_erc721_Id];
     }
+
+    function getAmountDelegated(address _borrower, string memory _vault, uint256 _erc721_Id) public view returns(uint256){
+        return hasDelegated[msg.sender][_borrower][_vault][_erc721_Id];
+    }
+
+     function getNftByOwner(string memory _vault) public view returns(uint256[] memory) {
+        return isOwner[msg.sender][_vault];
+    }
+    
 
 }
