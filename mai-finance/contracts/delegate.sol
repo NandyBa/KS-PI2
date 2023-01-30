@@ -117,7 +117,7 @@ contract delegate{
          // increase allowance to the vault contract for the repay function    
         mai.increaseAllowance(vaultAddress[_vault], _amount*(10**18));    
         mai.transferFrom(msg.sender, address(this), _amount*(10**18)); 
-        _qiVault.payBackToken(_erc721_Id, _amount, 0);
+        _qiVault.paybackTokenAll(_erc721_Id, block.timestamp,0);
         vaultDebt[_vault][_erc721_Id]-=_amount* (10**18);  
         
         
