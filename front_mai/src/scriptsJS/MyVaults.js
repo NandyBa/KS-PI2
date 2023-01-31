@@ -33,6 +33,19 @@ async function GetHealthFactor(vault){
   return healthFactorArray;
 }
 
+async function TestV(){
+  var idsArray = test(); //GetHealthFactor("WETH");
+  const vault = "WETH";
+  //test
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    GetHealthFactor(vault).then((x) => {
+        setData(x);
+      });
+  }, []); //rien dans les [] car on veut que ça se lance qu'une seule fois
+  console.log("data",data);
+}
+
 
 function MyVaults(connected){
   
@@ -45,10 +58,9 @@ function MyVaults(connected){
   const connectContent = () => {
     // Ici on doit récuperer les ids de tous les nfts que l'on a déposé 
     // sur notre contrat et afficher le health factor de chaque vault
-    var idsArray = test(); //GetHealthFactor("WETH");
-    console.log("idsArray",idsArray.toString());
     return(<div>Ici s'affichent les stats </div>)
   };
+  TestV();
 
   return (
     <div>
