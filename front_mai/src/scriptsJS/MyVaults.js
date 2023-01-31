@@ -2,13 +2,15 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 
+const provider = new ethers.providers.Web3Provider(window.ethereum);
+
 const delegateAddress = require("./adresses.json").delegate;
 const delegateAbi = require("../ABIS/delegate.json").abi;
-const delegateContract = new ethers.Contract(delegateAddress, delegateAbi);
+const delegateContract = new ethers.Contract(delegateAddress, delegateAbi, provider);
 
 const WethAddress = require("./adresses.json").Weth_Vault;
 const WethAbi = require("../ABIS/WethVault.json").abi;
-const WethContract = new ethers.Contract(WethAddress, WethAbi);
+const WethContract = new ethers.Contract(WethAddress, WethAbi, provider);
 
 async function getNftOwned(vault){
   return await delegateContract.getNftByOwner(vault);
