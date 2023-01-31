@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 
 const delegateAddress = require("./adresses.json").delegate;
-const delegateAbi = require("../ABIS/delegate.json").abi;
+const delegateAbi = require("../ABIS/delegate.json");
 const delegateContract = new ethers.Contract(delegateAddress, delegateAbi, provider);
 
 const WethAddress = require("./adresses.json").Weth_Vault;
