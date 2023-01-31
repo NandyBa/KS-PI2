@@ -5,7 +5,7 @@ import Delegate from './scriptsJS/delegate';
 function App() {
   return (
     <div className="App">
-      < Delegate/>
+      < Home/>
     </div>
   );
 }
