@@ -1,5 +1,4 @@
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import mmFox from "../img/MetaMask_Fox.png";
 import MyVaults from "./MyVaults"
 

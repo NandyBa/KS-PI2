@@ -1,6 +1,6 @@
 // Dans cette Selection, L'utilisateur voit en direct la santé des vaults dont il a déposé le nft sur notre contrat
 import { ethers } from "ethers";
-import { useEffect, useState, useParams } from "react";
+import { useEffect, useState } from "react";
 
 const delegateAddress = require("./adresses.json").delegate;
 const delegateAbi = require("../ABIS/delegate.json").abi;
@@ -39,7 +39,7 @@ async function TestV(){
   //test
   const [data, setData] = useState(null);
   useEffect(() => {
-    GetHealthFactor(vault).then((x) => {
+    test().then((x) => {
         setData(x);
       });
   }, []); //rien dans les [] car on veut que ça se lance qu'une seule fois
