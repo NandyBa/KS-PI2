@@ -1,4 +1,5 @@
 {
-    "WBTC_Vault": "address"
+    "delegate": "0x76921eFbdFDacA0141aF3Ae90f417354726c480c",
+    "Weth_Vault": "0x333596e635055451B04f0a66DBe87fCeaf9FB7AD"
 
 }

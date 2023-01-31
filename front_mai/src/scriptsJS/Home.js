@@ -12,6 +12,11 @@ function Home() {
 
     const accounts = await ethereum.request({ method: "eth_requestAccounts" });
     setCurrentAccount(accounts[0]);
+    // check if metamask is connected to goerli testnet
+    // const chainId = await ethereum.request({ method: "eth_chainId" });
+    // if (chainId !== "0x58E") {
+    //   alert("Please connect to polygon zk evm Testnet");
+    // };
   };
 
   const connectWalletButton = () => {
@@ -25,28 +30,33 @@ function Home() {
     );
   };
 
-  const handleClick = () => {
+  const handleClick = () => { 
     const firstSix = currentAccount.substring(2, 6).toUpperCase();
     const lastFour = currentAccount.substring(currentAccount.length - 4).toUpperCase();
-    const account = "0x" +firstSix + "..." + lastFour;
+    const account = "0x" +firstSix + "..." + lastFour; // affiche l'addresse proprement
 
     return (
       <div>
-        <p>{account}</p>
+        {account}
       </div>
     );
   };
 
+  var connected = false;
+  if(currentAccount){
+    connected = true;
+  }
+
   return (
     <div>
         <nav>
-            <lu>
-                <li>Home</li>
-                <li>{currentAccount ? handleClick() : connectWalletButton()}</li>
-            </lu>
+            <li>Home</li>
+            <li>{currentAccount ? handleClick() : connectWalletButton()}</li>
         </nav>
         <div>
-            < MyVaults />
+            < MyVaults 
+                currentAccount={connected}
+            />
         </div>   
     </div>
   );
