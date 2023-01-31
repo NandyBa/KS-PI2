@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 
 
@@ -20,7 +20,8 @@ function Delegate(){
     const [vaultName, setName] = useState(""); 
     const [owner, setOwnerAddress] = useState(""); 
     const [borrower, setBorrowerAddress] = useState(""); 
-    const [amount, setAmount] = useState(0); 
+    const [amount, setAmount] = useState(0);
+    const [text, setText] = useState("Approve"); 
 
     const handleChampToken = (event)=>{
         setTokenId(event.target.value)
@@ -41,16 +42,28 @@ function Delegate(){
         setAmount(event.target.value)
     }
 
+    const handleClick = async () => {
+        
+        await approveERC721();
+        setText('deposit ERC721'); 
+        await depositERC721();
+        setText("approve delegation"); 
+        await approveDelegation();
+      };
+
     async function approveERC721(){
     await WethContract.approve(delegateAddress,tokenId ); 
+    console.log("1"); 
     }
 
-    async function depositERC721(){
+     async function depositERC721(){
         await delegateContract.depositERC721(tokenId, vaultName); 
+        console.log("2"); 
     }
 
     async function approveDelegation(){
-        await delegateContract.approveDelegation(owner, borrower, vaultName, tokenId, amount); 
+        await delegateContract.approveDelegation(owner, borrower, vaultName, tokenId, amount);
+        console.log("3")
     }
     return(
         <div>
@@ -69,6 +82,10 @@ function Delegate(){
             <br></br>
             <text>Amount : </text>
             <input className="barre" type="text"value={amount} onChange={e=>handleChampAmount(e)}/>
+            <div>
+            <button onClick={handleClick}>{text}</button>
+            
+            </div>
         </div>
     )
     }
