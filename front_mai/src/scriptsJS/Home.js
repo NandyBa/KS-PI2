@@ -1,6 +1,9 @@
 import {  useState } from "react";
+import { Link, Outlet } from "react-router-dom"; 
+
 import mmFox from "../img/MetaMask_Fox.png";
 import MyVaults from "./MyVaults"
+import Navbar from "./Navbar";
 
 function Home() {
   const [currentAccount, setCurrentAccount] = useState(null);
@@ -48,10 +51,29 @@ function Home() {
 
   return (
     <div>
-        <nav>
-            <li>Home</li>
-            <li>{currentAccount ? handleClick() : connectWalletButton()}</li>
+        <nav className="navMenu">
+            <ul>
+            <li className="bout Home">
+                <Link to="/">Home </Link>
+            </li>
+            <li className="bout delegate">
+                <Link to="/Delegate">Delegate</Link>
+            </li>
+            <li className="bout Withdraw">
+                <Link to="/WithdrawNFT">Withdraw</Link>
+            </li>
+            <li className="bout Borrow">
+                <Link to="/Borrow">Borrow</Link>
+            </li>
+            <li className="bout Repay">
+                <Link to="/Repay">Repay</Link>
+            </li>
+            </ul>
         </nav>
+      <Outlet />
+        <div>
+        {currentAccount ? handleClick() : connectWalletButton()}
+        </div>
         <div>
             < MyVaults 
                 currentAccount={connected}
@@ -59,6 +81,8 @@ function Home() {
         </div>   
     </div>
   );
+
+ 
 }
 
 export default Home;

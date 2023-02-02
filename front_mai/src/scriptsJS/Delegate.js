@@ -7,7 +7,6 @@ function Delegate(){
 
 
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-
     const delegateAddress = require("./adresses.json").delegate;
     const delegateAbi = require("../ABIS/delegate.json");
     const delegateContract = new ethers.Contract(delegateAddress, delegateAbi, provider);
@@ -16,7 +15,7 @@ function Delegate(){
     const WethAbi = require("../ABIS/WethVault.json").abi;
     const WethContract = new ethers.Contract(WethAddress, WethAbi, provider);
 
-    const [tokenId, setTokenId] = useState(null); 
+    const [tokenId, setTokenId] = useState(0); 
     const [vaultName, setName] = useState(""); 
     const [owner, setOwnerAddress] = useState(""); 
     const [borrower, setBorrowerAddress] = useState(""); 
@@ -52,18 +51,34 @@ function Delegate(){
       };
 
     async function approveERC721(){
-    await WethContract.approve(delegateAddress,tokenId ); 
-    console.log("1"); 
+
+    await provider.send("eth_requestAccounts", []);
+    const signer = provider.getSigner();
+    const WethContract = new ethers.Contract(WethAddress, WethAbi, signer);
+
+    const tx = await WethContract.approve(delegateAddress,tokenId ); 
+    console.log("Tx hash : ${tx.hash}"); 
     }
 
      async function depositERC721(){
-        await delegateContract.depositERC721(tokenId, vaultName); 
-        console.log("2"); 
+
+        await provider.send("eth_requestAccounts", []);
+        const signer = provider.getSigner();
+        const delegateContract = new ethers.Contract(delegateAddress, delegateAbi, provider, signer);
+        const tx = await delegateContract.depositERC721(tokenId, vaultName); 
+        console.log("Tx hash : ${tx.hash}"); 
+
     }
 
     async function approveDelegation(){
-        await delegateContract.approveDelegation(owner, borrower, vaultName, tokenId, amount);
-        console.log("3")
+        
+        await provider.send("eth_requestAccounts", []);
+        const signer = provider.getSigner();
+
+        const delegateContract = new ethers.Contract(delegateAddress, delegateAbi, provider, signer);
+        const tx = await delegateContract.approveDelegation(owner, borrower, vaultName, tokenId, amount);
+        console.log("Tx hash : ${tx.hash}"); 
+
     }
     return(
         <div>
