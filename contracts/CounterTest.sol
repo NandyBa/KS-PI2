@@ -25,8 +25,6 @@ contract CounterTest {
         external
         view
         returns (bool canExec, bytes memory execPayload)
-    {
-        canExec = (block.timestamp - lastExecuted) > 180;
 
         execPayload = abi.encodeCall(this.increaseCount, (1));
     }

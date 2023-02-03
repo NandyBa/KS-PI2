@@ -8,7 +8,11 @@ import ChainInfo from "./ChainInfo";
 function Manage(){
 
     const [activeClick, setActiveClick] = useState(false);
-    const [activeTasks, setActiveTasks] = useState("");
+    const [activeTasks, setActiveTasks] = useState("Loading...");
+
+    useEffect(()=>{
+        ActiveTasks();
+    },[])
 
     async function ActiveTasks(){
 
@@ -28,8 +32,7 @@ function Manage(){
         });
     }
 
-        return(
-
+    return(
         <div className="automation">
 
             <header>
@@ -51,11 +54,8 @@ function Manage(){
             </header>
 
             <div className="background">
-                <h4>Active Tasks : {activeTasks}</h4><br/>
-                <button onClick={ActiveTasks}>Active Tasks</button>
+                <h4>Active Tasks : {activeTasks}</h4>
             </div>
-
-            <br/>
 
         </div>
     );

@@ -91,3 +91,12 @@ button:hover{
   transition: 0.3s; 
 }
 
+.condition{
+  text-align: center;
+  margin-top: 80px;
+}
+
+input{
+  border-radius: 6px;
+  font-size: medium;
+}
