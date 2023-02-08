@@ -16,7 +16,7 @@ function Repay(){
     const [owner, setOwnerAddress] = useState(""); 
     const [borrower, setBorrowerAddress] = useState(""); 
     const [amount, setAmount] = useState(0);
-    const [text, setText] = useState("Approve"); 
+    const [text, setText] = useState("Repay"); 
 
     const handleChampToken = (event)=>{
         setTokenId(event.target.value)

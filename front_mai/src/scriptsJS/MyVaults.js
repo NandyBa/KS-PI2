@@ -26,7 +26,7 @@ async function GetHealthFactor(vault){
     // get the health factor of each nft in the array
     var healthFactorArray = [];
     for (var i = 0; i < idsArray.length; i++) {
-      var healthFactor = await WethContract.getHealthFactor(idsArray[i]); // faie un switchcase pour recupere le contrat correspondant au bon vault
+      var healthFactor = await WethContract.getHealthFactor(idsArray[i]); // fait un switchcase pour recupere le contrat correspondant au bon vault
       healthFactorArray.push(idsArray[i], healthFactor);
     }
     console.log("heath",healthFactorArray);
