@@ -144,3 +144,8 @@ form .txt_field{
 .txt_field input:valid ~ span::before{
   width: 100%;
 }
+
+ul{
+  list-style: none;
+  padding: 20px;
+}

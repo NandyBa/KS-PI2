@@ -4,11 +4,12 @@ import { Contract } from "ethers";
 import { ethers } from "ethers";
 import { useState } from "react";
 import ERC20 from "../abis/ERC20.json";
-import { WithResolver } from "./Components/WithResolver";
 
 function Automate(){
+    let nextId = 0;
     const[hasResolver, setHasResolver] = useState(0);
-    const[functionInputs, setFunctionInputs] = useState(["0x77DbD1ddF6d9BfaB2aD5e76986A0628BB09B8Ae9", 1]);
+    const[functionInputs, setFunctionInputs] = useState();
+    const[inputList, setInputList] = useState([])
     const[contractABI, setContractABI] = useState([])
     const[inputs, setInputs] = useState({
         contractAddress : '',
@@ -22,8 +23,8 @@ function Automate(){
         setInputs({...inputs, [e.target.name]: e.target.value})
     };
 
-    const handleInput = (event) => {
-        setHasResolver(true);
+    const handleABI = (event) => {
+
     }
 
     const handleFunctionInput = (e) => {
@@ -52,10 +53,10 @@ function Automate(){
 
 
         const gelatoOps = new GelatoOpsSDK(chainId, signer);
-        const counter = new Contract(inputs.contractAddress, inputs.contractABI , signer);
+        const counter = new Contract(inputs.contractAddress, ERC20 , signer);
         const selector = counter.interface.getSighash(inputs.selectedFunctionWithParameters);
         // ["0x77DbD1ddF6d9BfaB2aD5e76986A0628BB09B8Ae9", 1]
-        const data = counter.interface.encodeFunctionData(inputs.selectedFunction, functionInputs);
+        const data = counter.interface.encodeFunctionData(inputs.selectedFunction, inputList);
         const interval_input = inputs.interval_seconds;
         // const resolverData = counter.interface.getSighash("checker()");
 
@@ -135,7 +136,7 @@ function Automate(){
                             <label htmlFor="Function">Select a function (name)</label>
                         </div>
                         <div class="txt_field">
-                            <input type="text" id="selectedInput1" name="selectedInput1" required="required" onChange={handleFunctionInput}></input>
+                            <input type='text' id="selectedInput1" name="selectedInput1" required="required" onChange={e => setFunctionInputs(e.target.value)}></input>
                             <span></span>
                             <label htmlFor="Interval">Set the inputs [parameter1, parameter2, ...]</label>
                         </div>
@@ -151,6 +152,21 @@ function Automate(){
                         </div>
                     </form>
 
+                    <button onClick={() => {
+                        setFunctionInputs('');
+                        // if (/^\d+$/.test(functionInputs)) parseInt(functionInputs)
+                        console.log(functionInputs)
+                        console.log(/^[0-9]+$/.test(functionInputs))
+                        inputList.push(functionInputs);
+                        console.log(inputList);
+                    }}>Add parameters</button>
+{/* 
+                    <ul>
+                        {inputList.map(input => (
+                            <li key={input.id}>{input.functionInputs}</li>
+                        ))}
+                    </ul> */}
+                    
 
                     <button onClick={CreateTask}>Create Task</button>
                 </div>
