@@ -157,7 +157,12 @@ function Automate(){
                         // if (/^\d+$/.test(functionInputs)) parseInt(functionInputs)
                         console.log(functionInputs)
                         console.log(/^[0-9]+$/.test(functionInputs))
-                        inputList.push(functionInputs);
+                        if(/^[0-9]+$/.test(functionInputs) === true){
+                            inputList.push(parseInt(functionInputs));
+                        }
+                        else{
+                            inputList.push(functionInputs);
+                        }
                         console.log(inputList);
                     }}>Add parameters</button>
 {/* 
