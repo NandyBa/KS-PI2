@@ -32,6 +32,20 @@ function Manage(){
         });
     }
 
+    async function CancelTask(){
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+
+        const networkDetails = await provider.getNetwork();
+        const chainId = networkDetails.chainId;
+
+        const gelatoOps = new GelatoOpsSDK(chainId, signer);
+
+        const activeTasks = await gelatoOps.getActiveTasks();
+        const task = activeTasks[0];
+        await gelatoOps.cancelTask(task.taskId);
+    }
+
     return(
         <div className="automation">
 
@@ -55,6 +69,10 @@ function Manage(){
 
             <div className="background">
                 <h4>Active Tasks : {activeTasks}</h4>
+            </div>
+
+            <div className="background">
+                <button onClick={CancelTask}>Cancel Task</button>
             </div>
 
         </div>
