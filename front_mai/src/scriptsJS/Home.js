@@ -2,7 +2,7 @@ import {  useState } from "react";
 import { Link, Outlet } from "react-router-dom"; 
 
 import mmFox from "../img/MetaMask_Fox.png";
-import MyVaults from "./MyVaults"
+// import MyVaults from "./MyVaults"
 import Navbar from "./Navbar";
 
 function Home() {
@@ -70,14 +70,14 @@ function Home() {
             </li>
             </ul>
         </nav>
-      <Outlet />
+      
         <div>
         {currentAccount ? handleClick() : connectWalletButton()}
         </div>
         <div>
-            < MyVaults 
+            {/* < MyVaults 
                 currentAccount={connected}
-            />
+            /> */}
         </div>   
     </div>
   );
