@@ -1,88 +1,75 @@
 import {  useState } from "react";
-import { Link, Outlet } from "react-router-dom"; 
 
 import mmFox from "../img/MetaMask_Fox.png";
 // import MyVaults from "./MyVaults"
-import Navbar from "./Navbar";
+import Delegate from "./Delegate";
+import WithdrawNft from "./WithdrawNft";
+import Borrow from "./Borrow";
+import Repay from "./Repay";
+
+import React, { Component } from 'react';
+
+import { ethers } from "ethers";
+
+
+class Metamask extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+    };
+  }
+
+  async connectToMetamask() {
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const accounts = await provider.send("eth_requestAccounts", []);
+    this.setState({ selectedAddress: accounts[0] })
+  }
+
+  renderMetamask() {
+    if (!this.state.selectedAddress) {
+      return (
+        <button onClick={() => this.connectToMetamask()}>Connect to Metamask  <img src={mmFox} width={20} height={20}></img> </button>
+      )
+    } else {
+      var address = "0x" + this.state.selectedAddress.substring(2, 6) + "..." + this.state.selectedAddress.substring(this.state.selectedAddress.length - 4, this.state.selectedAddress.length)
+      return (
+        <p>Welcome {address}</p>
+      );
+    }
+  }
+
+  render() {
+
+      return (
+        <div>
+          {this.renderMetamask()}
+          <Home />
+        </div>
+      )
+  }
+}
+
+function getHtmlOutput() {
+  // This function returns a string with HTML tags
+  return Delegate();
+}
 
 function Home() {
-  const [currentAccount, setCurrentAccount] = useState(null);
+  
+  const [htmlOutput, setHtmlOutput] = useState(false);
 
-
-  const connectWalletHandler = async () => {
-    const { ethereum } = window;
-
-    const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-    setCurrentAccount(accounts[0]);
-    // check if metamask is connected to goerli testnet
-    // const chainId = await ethereum.request({ method: "eth_chainId" });
-    // if (chainId !== "0x58E") {
-    //   alert("Please connect to polygon zk evm Testnet");
-    // };
-  };
-
-  const connectWalletButton = () => {
-    return (
-      <div className="mm-button">
-        <button onClick={connectWalletHandler} className="button-4">
-          <img src={mmFox} width={20} height={20}></img>
-          Connect Wallet
-        </button>
-      </div>
-    );
-  };
-
-  const handleClick = () => { 
-    const firstSix = currentAccount.substring(2, 6).toUpperCase();
-    const lastFour = currentAccount.substring(currentAccount.length - 4).toUpperCase();
-    const account = "0x" +firstSix + "..." + lastFour; // affiche l'addresse proprement
-
-    return (
-      <div>
-        {account}
-      </div>
-    );
-  };
-
-  var connected = false;
-  if(currentAccount){
-    connected = true;
+  async function handleClick(variable) {
+    setHtmlOutput(variable);
   }
 
   return (
     <div>
-        <nav className="navMenu">
-            <ul>
-            <li className="bout Home">
-                <Link to="/">Home </Link>
-            </li>
-            <li className="bout delegate">
-                <Link to="/Delegate">Delegate</Link>
-            </li>
-            <li className="bout Withdraw">
-                <Link to="/WithdrawNFT">Withdraw</Link>
-            </li>
-            <li className="bout Borrow">
-                <Link to="/Borrow">Borrow</Link>
-            </li>
-            <li className="bout Repay">
-                <Link to="/Repay">Repay</Link>
-            </li>
-            </ul>
-        </nav>
-      
-        <div>
-        {currentAccount ? handleClick() : connectWalletButton()}
-        </div>
-        <div>
-            {/* < MyVaults 
-                currentAccount={connected}
-            /> */}
-        </div>   
+      <p>Am I a <button onClick={() => setHtmlOutput(true)}>Delegator</button> or a <button onClick={() => setHtmlOutput(false)}>Borrower</button> ?</p>
+      {htmlOutput && <div><h1>Delegation Dashboard</h1> <Delegate /> <h1>Withdraw Nft</h1> <WithdrawNft/> </div> }
+      {!htmlOutput && <div><h1>Borrow Dashboard</h1> <Borrow /> <h1>Repay Dashboard</h1> <Repay/> </div>}
     </div>
   );
-
- 
 }
 
-export default Home;
+export default Metamask;

@@ -84,7 +84,6 @@ function Delegate(){
         <div>
             <text>tokenID : </text>
             <input className="barre" type="number"value={tokenId} onChange={e=>handleChampToken(e)}/>
-            
             <br></br>
             <text>Vault : </text>
             <input className="barre" type="text"value={vaultName} onChange={e=>handleChampVault(e)}/>
@@ -92,15 +91,7 @@ function Delegate(){
             <text>Lender address : </text>
             <input className="barre" type="text"value={owner} onChange={e=>handleChampOwner(e)}/>
             <br></br>
-            <text>Borrower address : </text>
-            <input className="barre" type="text"value={borrower} onChange={e=>handleChampBorrower(e)}/>
-            <br></br>
-            <text>Amount : </text>
-            <input className="barre" type="text"value={amount} onChange={e=>handleChampAmount(e)}/>
-            <div>
-            <button onClick={handleClick}>{text}</button>
-            
-            </div>
+            <text>Borrower address : </text><input className="barre" type="text"value={borrower} onChange={e=>handleChampBorrower(e)}/><br></br><text>Amount : </text><input className="barre" type="text"value={amount} onChange={e=>handleChampAmount(e)}/><div><button onClick={handleClick}>{text}</button></div>
         </div>
     )
     }

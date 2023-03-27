@@ -1,3 +1,43 @@
+/* Apply styles to the div */
+div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 20px;
+}
+
+/* Apply styles to the text elements */
+text {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+/* Apply styles to the input elements */
+input {
+  padding: 5px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 200px;
+}
+
+/* Apply styles to the button element */
+button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* Apply styles when the button is hovered over */
+button:hover {
+  background-color: #3e8e41;
+}
+
+
 .App {
   text-align: center;
 }

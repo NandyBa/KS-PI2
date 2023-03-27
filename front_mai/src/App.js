@@ -9,15 +9,8 @@ import Navbar from './scriptsJS/Navbar';
 function App() {
   return (
     <div className="App">
-      <h1>Delegate</h1>
-      <Delegate />
-      <h1>Borrow</h1>
-      <Borrow />
-      <h1>Repay</h1>
-      <Repay />
-      <h1>Withdraw</h1>
-      <WithdrawNft />
-      
+      <Home />
+
     </div>
   );
 }
